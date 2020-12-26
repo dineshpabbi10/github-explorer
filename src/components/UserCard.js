@@ -5,7 +5,11 @@ export default function UserCard(props) {
     <div className="Card">
       <div className="CardBody">
         <div className="CardImage">
-          <img src={data.avatar_url} />
+          <img
+            src={data.avatar_url}
+            alt={data.name}
+            className="img-responsive"
+          />
         </div>
         <div className="CardIntro">
           <h1>{data.name}</h1>

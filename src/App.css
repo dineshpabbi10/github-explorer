@@ -73,6 +73,7 @@ button {
   display: flex;
   flex-flow: column wrap;
   width: 100%;
+  color: rgb(40, 43, 43);
 }
 
 .CardImage {
@@ -90,4 +91,16 @@ button {
 img {
   border-radius: 20px;
   height: 200px;
+}
+.card {
+  color: rgb(40, 43, 43);
+  display: flex;
+  flex-flow: row wrap;
+  padding: 2%;
+}
+.card a {
+  color: rgb(40, 43, 43);
+}
+.card a:hover {
+  text-decoration: none;
 }
