@@ -10,15 +10,29 @@ export default class Search extends React.Component {
     });
   };
   render() {
+    const { fetchData } = this.props;
     const { username } = this.state;
     return (
-      <input
-        value={username}
-        type="text"
-        name="username"
-        placeholder="username"
-        onChange={this.handleUsernameChange}
-      />
+      <div className="mainDivision">
+        <div className="inputDivision">
+          <input
+            value={username}
+            type="text"
+            name="username"
+            placeholder="Enter Username"
+            onChange={this.handleUsernameChange}
+            className="inputUser"
+          />
+        </div>
+        <div className="buttonDivision">
+          <button
+            onClick={() => fetchData(username)}
+            className="btn btn-large btn-success"
+          >
+            Search
+          </button>
+        </div>
+      </div>
     );
   }
 }
