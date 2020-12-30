@@ -3,12 +3,14 @@ import React from "react";
 import Search from "./components/Search";
 import UserCard from "./components/UserCard";
 import RepoCard from "./components/RepoCard";
+const PAGE_SIZE = 10;
 class App extends React.Component {
   state = {
     user: null,
     userDataerror: null,
     reposError: null,
     loading: false,
+    page: 1,
     repos: [],
   };
   fetchUserData = async (username) => {
@@ -21,12 +23,13 @@ class App extends React.Component {
     return { error };
   };
   fetchRepos = async (username) => {
+    const { page } = this.state;
     const res = await fetch(
-      `https://api.github.com/users/${username}/repos?page=1`
+      `https://api.github.com/users/${username}/repos?page=${page}&per_page=${PAGE_SIZE}`
     );
     if (res.ok) {
       const data = await res.json();
-      return { data };
+      return { data, page: page + 1 };
     }
     const error = (await res.json()).message;
     return { error };
@@ -43,6 +46,7 @@ class App extends React.Component {
             user: user.data,
             repos: repos.data,
             loading: false,
+            page: repos.page,
             userDataerror: null,
             reposError: null,
           });
@@ -61,8 +65,25 @@ class App extends React.Component {
     });
     /**Fetch the user Data */
   };
+  loadMore = async () => {
+    const { data, page } = await this.fetchRepos(this.state.user.login);
+    if (data) {
+      this.setState((state) => ({
+        repos: [...state.repos, ...data],
+        page,
+      }));
+    }
+  };
   render() {
-    const { userDataerror, reposError, loading, user, repos } = this.state;
+    const {
+      userDataerror,
+      reposError,
+      loading,
+      user,
+      repos,
+      page,
+    } = this.state;
+
     return (
       <div>
         <Search fetchData={this.fetchData} />
@@ -77,6 +98,15 @@ class App extends React.Component {
           {!loading &&
             !reposError &&
             repos.map((repo) => <RepoCard key={repo.id} repo={repo} />)}
+
+          {!loading &&
+            !userDataerror &&
+            user &&
+            page * PAGE_SIZE < user.public_repos && (
+              <button className="btn btn-success" onClick={this.loadMore}>
+                Load More
+              </button>
+            )}
         </div>
       </div>
     );
